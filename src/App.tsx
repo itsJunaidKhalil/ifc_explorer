@@ -1,35 +1,28 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import "./App.css";
-import { Button } from "./components/ui/button";
 
-function App() {
-  const [count, setCount] = useState(0);
-
+async function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen flex flex-col">
+      <header className="bg-background border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">My App</h1>
+          <Button>Action</Button>
+        </div>
+      </header>
+
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="grid grid-cols-5 gap-8">
+          <div className="col-span-3">
+            <Card className="h-full"></Card>
+          </div>
+          <div className="col-span-2">
+            <Card className="h-full"></Card>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
 
