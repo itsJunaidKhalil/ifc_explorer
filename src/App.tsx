@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import "./App.css";
 
-async function App() {
+function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-background border-b">
