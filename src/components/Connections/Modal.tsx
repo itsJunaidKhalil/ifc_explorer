@@ -80,7 +80,7 @@ function ModalReducer(
     case "REMOVE_CONFIGURATION":
       return state.filter((config) => config.id !== action.payload);
     case "RESET":
-      return [];
+      return [...configurations];
     case "change_value":
       const newChangeState = state.map((conf) => {
         if (conf.id != action.id) return conf;
@@ -175,6 +175,7 @@ export default function Modal({ con, appDispatch }: Props) {
               }}
               placeholder="Configuration Name"
               className="min-w-full"
+              autoFocus
             ></Input>
           </div>
           <Label className="-mb-3">Components</Label>
@@ -204,6 +205,7 @@ export default function Modal({ con, appDispatch }: Props) {
                       connection: { ...con },
                     },
                   });
+                  dispatch({type:"RESET"})
 
                   console.log(out);
                 }

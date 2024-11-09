@@ -94,6 +94,7 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
       if (ifcModel) {
         ifcViewer.context.scene.removeModel(ifcModel!);
       }
+      setFilename(file.name);
       console.log("loading file", file);
       setUsePreset(false);
       connections.forEach((connection) => {
@@ -111,8 +112,7 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
         setLoading(false);
       }
       setOriginMaterial(model.material);
-      setFilename(file.name);
-      loadConnections();
+      loadConnections(file.name);
     }
   };
 
@@ -139,7 +139,7 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
           .then((model) => {
             setIfcModel(model);
             setOriginMaterial(model.material);
-            loadConnections();
+            loadConnections(filename);
           })
           .finally(() => {
             setLoading(false);
@@ -148,7 +148,14 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
     }
   }, [ifcViewer, filename, usePreset]);
 
-  async function loadConnections() {
+  async function loadConnections(filename: string) {
+    connections.forEach((connection) => {
+      (connectionGroups as any)[connection.key]?.forEach((mesh: any) =>
+        ifcViewer!.context.scene.removeModel(mesh)
+      );
+      connectionGroups[connection.key] = [];
+    });
+    
     const a: { [key: string]: any } = await fetch(
       "/" + filename + ".json"
     ).then((res) => res.json());
@@ -160,12 +167,7 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
       };
     });
 
-    connections.forEach((connection) => {
-      (connectionGroups as any)[connection.key]?.forEach((mesh: any) =>
-        ifcViewer!.context.scene.removeModel(mesh)
-      );
-      connectionGroups[connection.key] = [];
-    });
+ 
 
     appDispatch({
       type: "set_connection_amounts",
