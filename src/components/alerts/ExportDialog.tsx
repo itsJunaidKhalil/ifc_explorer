@@ -37,6 +37,7 @@ export default function ExportDialog({ connection_comps, appDispatch }: Props) {
     if (Object.keys(rows).length !== 0) {
       setTimeout(() => {
         window.print();
+        console.log("⸮Queres?")
       }, 100)
     }
   }, [rows])
