@@ -3,10 +3,11 @@ import "./App.css";
 import MyAlert2 from "./components/alerts/MyAlert2";
 import ConnDisplay from "./components/Connections/ConnDisplay";
 import { Configuration, ConnComp, Connection, connections } from "./interfaces";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import Ifc from "./components/ifc";
 import MyTable2 from "./components/tables/MyTable2";
 import ExpandableTableLeft from "./components/configurations-table";
+import { Button } from "./components/ui/button";
 
 type AppState = {
   unique_id_count: number;
@@ -86,6 +87,7 @@ function App() {
     connection_components: [],
     connections: connections,
   });
+  const [isTransparent, setIsTransparent] = useState(false);
 
   console.log(state);
 
@@ -105,8 +107,9 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-3">
             <Card className="h-full">
-              <Ifc />
+              <Ifc isTransparent={isTransparent}/>
             </Card>
+            <Button onClick={() => setIsTransparent(!isTransparent)}>{isTransparent ? 'Transparent' : 'Set transparent'}</Button>
           </div>
           <div className="lg:col-span-2">
             <h2 className="text-xl font-semibold mb-4">Connections</h2>

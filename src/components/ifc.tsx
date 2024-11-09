@@ -2,11 +2,22 @@ import React, { createRef, useEffect, useState } from "react";
 import { Color, MeshLambertMaterial } from "three";
 import { IFCBEAM, IFCCOLUMN } from "web-ifc";
 import { IfcViewerAPI } from "web-ifc-viewer";
+import { Input } from "./ui/input";
+import { Label } from "@radix-ui/react-label";
 
-export default function () {
+interface Props {
+  isTransparent: boolean;
+};
+
+export default function Ifc({isTransparent}: Props) {
   const ifcContainerRef = createRef<HTMLDivElement>();
   const [ifcViewer, setIfcViewer] = useState<IfcViewerAPI>();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ifcModel, setIfcModel] = useState<any>();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [originMaterial, setOriginMaterial] = useState<any>();
 
   useEffect(() => {
     if (ifcContainerRef.current) {
@@ -24,10 +35,27 @@ export default function () {
       });
       ifcViewer.IFC.loadIfcUrl("/DummyModel.ifc", true).then((model) => {
         setIfcModel(model);
+        setOriginMaterial((model.material));
       });
       setIfcViewer(ifcViewer);
     }
   }, []);
+
+  useEffect(() => {
+    if (!ifcModel) return;
+    console.log(originMaterial, ifcModel.material);
+
+    if (isTransparent) {
+      ifcModel.material = new MeshLambertMaterial({
+        // color: 0xffffff,
+        transparent: true,
+        opacity: 0.5,
+      });
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ifcModel.material = originMaterial.map((oM: any) => new MeshLambertMaterial(oM));
+    }
+  }, [isTransparent]);
 
   const ifcOnLoad = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e && e.target && e.target.files && e.target.files[0];
@@ -39,15 +67,18 @@ export default function () {
 
       const model = await ifcViewer.IFC.loadIfcUrl(ifcURL, true);
       setIfcModel(model);
+      console.log(model.material);
+      setOriginMaterial(model.material);
 
       // Set transparent material
-      if (false) {
-        model.material = new MeshLambertMaterial({
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.5,
-        });
-      }
+      // eslint-disable-next-line no-constant-condition
+      // if (isTransparent) {
+      //   model.material = new MeshLambertMaterial({
+      //     color: 0xffffff,
+      //     transparent: true,
+      //     opacity: 0.5,
+      //   });
+      // }
 
       // Render shadow
       // await ifcViewer.shadowDropper.renderShadow(model.modelID);
@@ -85,7 +116,11 @@ export default function () {
   return (
     <div className="h-[80vh]">
       <div ref={ifcContainerRef} className="h-full" />
-      <input type="file" accept=".ifc" onChange={ifcOnLoad} />
+
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Input id="picture" type="file" accept=".ifc" onChange={ifcOnLoad}  />
+        </div>
+      {/* <Input type="file" accept=".ifc" onChange={ifcOnLoad} /> */}
     </div>
   );
 }
