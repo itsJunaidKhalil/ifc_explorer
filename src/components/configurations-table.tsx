@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronRight, ChevronDown, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -70,14 +70,22 @@ export default function ExpandableTableLeft() {
                 </TableCell>
                 <TableCell className="font-medium">{row.type}</TableCell>
                 <TableCell>{row.name}</TableCell>
-                <TableCell className="text-right">{row.amount}</TableCell>
+                <TableCell className="flex items-center justify-end space-x-1">
+                  <Button variant="outline" size="icon" onClick={() => {}}>
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <span className="w-8 text-center">{row.amount}</span>
+                  <Button variant="outline" size="icon" onClick={() => {}}>
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
               {expandedRows[row.id] && (
                 <TableRow>
                   <TableCell colSpan={4}>
                     <div className="p-2 bg-muted">
                       <pre className="text-sm whitespace-pre-wrap">
-                        {JSON.stringify(row, null, 2)}
+                        {row.name}
                       </pre>
                     </div>
                   </TableCell>
