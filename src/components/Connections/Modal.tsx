@@ -169,6 +169,7 @@ export default function Modal({ con, appDispatch }: Props) {
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
             <Label htmlFor="name">Name</Label>
+            <span className="text-gray-500 text-xs">Please enter the name of the configuration</span>
             <Input
               id="name"
               value={name}
