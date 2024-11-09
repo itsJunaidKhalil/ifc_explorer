@@ -3,7 +3,7 @@ import {
   AlertDialogContent as DialogContent,
   AlertDialogFooter as DialogFooter,
   AlertDialogHeader as DialogHeader,
-  AlertDialogTitle as DialogTitle
+  AlertDialogTitle as DialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
@@ -12,10 +12,10 @@ import { ConnComp } from "@/interfaces";
 import { AppAction } from "@/App";
 
 export interface Configuration {
-  id: number
-  name: string
-  status: "Paid" | "Pending" | "Unpaid"
-  count: number
+  id: number;
+  name: string;
+  status: "Paid" | "Pending" | "Unpaid";
+  count: number;
 }
 
 const configurations: Configuration[] = [
@@ -52,16 +52,16 @@ const configurations: Configuration[] = [
 ];
 
 interface Props {
-  connection_comps: ({ id: number } & ConnComp)[]
-  appDispatch?: React.Dispatch<AppAction>
+  connection_comps: ({ id: number } & ConnComp)[];
+  appDispatch?: React.Dispatch<AppAction>;
 }
 
-export default function MyAlert2({ connection_comps, appDispatch }: Props) {
-
+export default function ExportDialog({ connection_comps, appDispatch }: Props) {
   const [open, setOpen] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedConfigs, setSelectedConfigs] = useState<Configuration[]>(configurations);
+  const [selectedConfigs, setSelectedConfigs] =
+    useState<Configuration[]>(configurations);
   return (
     <div className="flex flex-col items-start gap-4">
       <Button onClick={() => setOpen(true)}>Export</Button>
@@ -71,7 +71,10 @@ export default function MyAlert2({ connection_comps, appDispatch }: Props) {
             <DialogTitle>Configurations for checkout</DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto max-h-[60vh]">
-            <MyTable2 configurations={connection_comps} appDispatch={appDispatch} />
+            <MyTable2
+              configurations={connection_comps}
+              appDispatch={appDispatch}
+            />
           </div>
           <DialogFooter className="sm:justify-start gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
@@ -83,7 +86,8 @@ export default function MyAlert2({ connection_comps, appDispatch }: Props) {
                   "Selected configurations:",
                   configurations.filter(
                     (config) =>
-                      selectedConfigs.some(c => c.id === config.id) && config.count > 0
+                      selectedConfigs.some((c) => c.id === config.id) &&
+                      config.count > 0
                   )
                 );
                 setOpen(false);

@@ -1,16 +1,18 @@
 import { Card } from "@/components/ui/card";
 import "./App.css";
-import MyAlert2 from "./components/alerts/MyAlert2";
 import ConnDisplay from "./components/Connections/ConnDisplay";
 import { Configuration, ConnComp, Connection, connections } from "./interfaces";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import Ifc from "./components/ifc";
-import MyTable2 from "./components/tables/MyTable2";
 import ExpandableTableLeft from "./components/configurations-table";
+import { Button } from "./components/ui/button";
+import ConfigurationsTable from "./components/configurations-table";
+import ExportDialog from "./components/alerts/ExportDialog";
+import trollWebp from "./assets/troll_1f9cc.webp";
 
 type AppState = {
   unique_id_count: number;
-  connection_components: ({ id: number } & ConnComp)[];
+  configurations: ConnComp[];
   connections: Connection[];
 };
 
@@ -21,6 +23,14 @@ export type AppAction =
   }
   | {
     type: "remove_component";
+    id: number;
+  }
+  | {
+    type: "increment_configuration";
+    id: number;
+  }
+  | {
+    type: "decrement_configuration";
     id: number;
   }
   | { type: "ADD_CONFIGURATION"; payload: Configuration }
@@ -37,20 +47,20 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
     case "RESET":
       return {
         unique_id_count: 0,
-        connection_components: [],
+        configurations: [],
         connections: [],
       };
     case "RESET_COMPONENTS":
       return {
         ...state,
-        connection_components: [],
+        configurations: [],
       };
     case "add_components":
       return {
         ...state,
-        connection_components: [
-          ...state.connection_components,
-          { id: state.unique_id_count, ...action.conn_comp },
+        configurations: [
+          ...state.configurations,
+          { ...action.conn_comp, id: state.unique_id_count },
         ],
         unique_id_count: state.unique_id_count + 1,
         connections: state.connections.map((con) => {
@@ -59,14 +69,57 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
           return con;
         }),
       };
+    case "increment_configuration":
+      const connection1 = state.connections.find(
+        (conn) =>
+          state.configurations.find((val) => val.id === action.id)?.connection
+            .id === conn.id
+      )!;
+      return {
+        ...state,
+        configurations: state.configurations.map((val) => {
+          if (val.id === action.id) {
+            if (connection1.amount === 0) return val;
+            return { ...val, count: val.count + 1 };
+          }
+          return val;
+        }),
+        connections: state.connections.map((con) => {
+          if (con.id == connection1.id && con.amount > 0)
+            return { ...con, amount: con.amount - 1 };
+          return con;
+        }),
+      };
+    case "decrement_configuration":
+      const connection2 = state.connections.find(
+        (conn) =>
+          state.configurations.find((val) => val.id === action.id)?.connection
+            .id === conn.id
+      )!;
+      return {
+        ...state,
+        configurations: state.configurations
+          .filter((val) => !(val.id === action.id && val.count === 1))
+          .map((val) => {
+            if (val.id === action.id) {
+              return { ...val, count: val.count - 1 };
+            }
+            return val;
+          }),
+        connections: state.connections.map((con) => {
+          if (con.id == connection2.id)
+            return { ...con, amount: con.amount + 1 };
+          return con;
+        }),
+      };
     case "remove_component":
       return {
         ...state,
-        connection_components: state.connection_components.filter(
+        configurations: state.configurations.filter(
           (val) => val.id !== action.id
         ),
         connections: state.connections.map((con) => {
-          const conn_comp = state.connection_components.filter(
+          const conn_comp = state.configurations.filter(
             (val) => val.id === action.id
           );
           if (conn_comp.length == 1 && con.id == conn_comp[0].connection.id)
@@ -83,45 +136,68 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
 function App() {
   const [state, dispatch] = useReducer(AppReducer, {
     unique_id_count: 0,
-    connection_components: [],
+    configurations: [],
     connections: connections,
   });
+  const [isTransparent, setIsTransparent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   console.log(state);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-background border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
-          <h1 className="text-2xl font-bold">IFCTroll 🧌</h1>
-          <MyAlert2
-            connection_comps={state.connection_components}
-            appDispatch={dispatch}
-          />
+    <div>
+      {loading && (
+        <div className="overlay fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <span className="font-semibold text-lg">Building the 3d Model, please wait...</span>
         </div>
-      </header>
+      )}
+      <div className="min-h-screen flex flex-col">
+        <header className="bg-background border-b">
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
+            <h1 className="text-2xl font-bold">IFCTroll
+              <img src={trollWebp} className="inline h-6 w-6 ms-2" />
+            </h1>
+            {/* 🧌 */}
+            <ExportDialog
+              connection_comps={state.configurations}
+              appDispatch={dispatch}
+            />
+          </div>
+        </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-3">
-            <Card className="h-full">
-              <Ifc />
-            </Card>
-          </div>
-          <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Connections</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {state.connections.map((val, i) => (
-                <ConnDisplay key={i} {...val} appDispatch={dispatch} />
-              ))}
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div className="lg:col-span-3">
+              <Card className="h-full">
+                <Ifc
+                  isTransparent={isTransparent}
+                  setIsTransparent={setIsTransparent}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              </Card>
+              {/* <Button onClick={() => setIsTransparent(!isTransparent)}>{isTransparent ? 'Transparent' : 'See transparent'}</Button> */}
             </div>
-            <h2 className="text-xl font-semibold mb-4 mt-4">Configurations</h2>
-            <Card>
-              <ExpandableTableLeft />
-            </Card>
+            <div className="lg:col-span-2">
+              <h2 className="text-xl font-semibold mb-4">Connections</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {state.connections.map((val, i) => (
+                  <ConnDisplay key={i} {...val} appDispatch={dispatch} />
+                ))}
+              </div>
+              <h2 className="text-xl font-semibold mb-4 mt-4">
+                Configurations
+              </h2>
+              <Card>
+                <ConfigurationsTable
+                  configurations={state.configurations}
+                  appDispatch={dispatch}
+                />
+              </Card>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

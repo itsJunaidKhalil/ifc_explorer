@@ -11,6 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Configuration, ConnComp } from "@/interfaces";
+import { AppAction } from "@/App";
 
 type TableData = {
   id: number;
@@ -19,12 +21,15 @@ type TableData = {
   amount: number;
 };
 
-const data: TableData[] = [
-  { id: 1, type: "Column to Wall", name: "1", amount: 2 },
-  { id: 2, type: "Column to Wall", name: "2", amount: 3 },
-];
+type Props = {
+  configurations: ConnComp[];
+  appDispatch: React.Dispatch<AppAction>;
+};
 
-export default function ExpandableTableLeft() {
+export default function ConfigurationsTable({
+  configurations,
+  appDispatch,
+}: Props) {
   const [expandedRows, setExpandedRows] = React.useState<
     Record<number, boolean>
   >({});
@@ -42,13 +47,12 @@ export default function ExpandableTableLeft() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[50px]"></TableHead>
-            <TableHead>Type</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead>Amount</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((row) => (
+          {configurations.map((row) => (
             <React.Fragment key={row.id}>
               <TableRow>
                 <TableCell>
@@ -68,14 +72,31 @@ export default function ExpandableTableLeft() {
                     )}
                   </Button>
                 </TableCell>
-                <TableCell className="font-medium">{row.type}</TableCell>
-                <TableCell>{row.name}</TableCell>
+                <TableCell className="font-medium">{row.name}</TableCell>
                 <TableCell className="flex items-center justify-end space-x-1">
-                  <Button variant="outline" size="icon" onClick={() => {}}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      appDispatch({
+                        type: "decrement_configuration",
+                        id: row.id,
+                      });
+                    }}
+                  >
                     <Minus className="h-4 w-4" />
                   </Button>
-                  <span className="w-8 text-center">{row.amount}</span>
-                  <Button variant="outline" size="icon" onClick={() => {}}>
+                  <span className="w-8 text-center">{row.count}</span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      appDispatch({
+                        type: "increment_configuration",
+                        id: row.id,
+                      });
+                    }}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </TableCell>
@@ -83,11 +104,9 @@ export default function ExpandableTableLeft() {
               {expandedRows[row.id] && (
                 <TableRow>
                   <TableCell colSpan={4}>
-                    <div className="p-2 bg-muted">
-                      <pre className="text-sm whitespace-pre-wrap">
-                        {row.name}
-                      </pre>
-                    </div>
+                    {row.components.map((comp) => (
+                      <li key={comp.id}>{comp.name}</li>
+                    ))}
                   </TableCell>
                 </TableRow>
               )}
