@@ -1,17 +1,17 @@
 import { Card } from "@/components/ui/card";
 import "./App.css";
-import MyAlert2 from "./components/alerts/MyAlert2";
 import ConnDisplay from "./components/Connections/ConnDisplay";
 import { Configuration, ConnComp, Connection, connections } from "./interfaces";
 import { useReducer, useState } from "react";
 import Ifc from "./components/ifc";
-import MyTable2 from "./components/tables/MyTable2";
 import ExpandableTableLeft from "./components/configurations-table";
 import { Button } from "./components/ui/button";
+import ConfigurationsTable from "./components/configurations-table";
+import ExportDialog from "./components/alerts/ExportDialog";
 
 type AppState = {
   unique_id_count: number;
-  connection_components: ({ id: number } & ConnComp)[];
+  configurations: ConnComp[];
   connections: Connection[];
 };
 
@@ -22,6 +22,14 @@ export type AppAction =
     }
   | {
       type: "remove_component";
+      id: number;
+    }
+  | {
+      type: "increment_configuration";
+      id: number;
+    }
+  | {
+      type: "decrement_configuration";
       id: number;
     }
   | { type: "ADD_CONFIGURATION"; payload: Configuration }
@@ -38,20 +46,20 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
     case "RESET":
       return {
         unique_id_count: 0,
-        connection_components: [],
+        configurations: [],
         connections: [],
       };
     case "RESET_COMPONENTS":
       return {
         ...state,
-        connection_components: [],
+        configurations: [],
       };
     case "add_components":
       return {
         ...state,
-        connection_components: [
-          ...state.connection_components,
-          { id: state.unique_id_count, ...action.conn_comp },
+        configurations: [
+          ...state.configurations,
+          { ...action.conn_comp, id: state.unique_id_count },
         ],
         unique_id_count: state.unique_id_count + 1,
         connections: state.connections.map((con) => {
@@ -60,14 +68,57 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
           return con;
         }),
       };
+    case "increment_configuration":
+      const connection1 = state.connections.find(
+        (conn) =>
+          state.configurations.find((val) => val.id === action.id)?.connection
+            .id === conn.id
+      )!;
+      return {
+        ...state,
+        configurations: state.configurations.map((val) => {
+          if (val.id === action.id) {
+            if (connection1.amount === 0) return val;
+            return { ...val, count: val.count + 1 };
+          }
+          return val;
+        }),
+        connections: state.connections.map((con) => {
+          if (con.id == connection1.id && con.amount > 0)
+            return { ...con, amount: con.amount - 1 };
+          return con;
+        }),
+      };
+    case "decrement_configuration":
+      const connection2 = state.connections.find(
+        (conn) =>
+          state.configurations.find((val) => val.id === action.id)?.connection
+            .id === conn.id
+      )!;
+      return {
+        ...state,
+        configurations: state.configurations
+          .filter((val) => !(val.id === action.id && val.count === 1))
+          .map((val) => {
+            if (val.id === action.id) {
+              return { ...val, count: val.count - 1 };
+            }
+            return val;
+          }),
+        connections: state.connections.map((con) => {
+          if (con.id == connection2.id)
+            return { ...con, amount: con.amount + 1 };
+          return con;
+        }),
+      };
     case "remove_component":
       return {
         ...state,
-        connection_components: state.connection_components.filter(
+        configurations: state.configurations.filter(
           (val) => val.id !== action.id
         ),
         connections: state.connections.map((con) => {
-          const conn_comp = state.connection_components.filter(
+          const conn_comp = state.configurations.filter(
             (val) => val.id === action.id
           );
           if (conn_comp.length == 1 && con.id == conn_comp[0].connection.id)
@@ -84,7 +135,7 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
 function App() {
   const [state, dispatch] = useReducer(AppReducer, {
     unique_id_count: 0,
-    connection_components: [],
+    configurations: [],
     connections: connections,
   });
   const [isTransparent, setIsTransparent] = useState(false);
@@ -103,8 +154,8 @@ function App() {
         <header className="bg-background border-b">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
             <h1 className="text-2xl font-bold">IFCTroll 🧌</h1>
-            <MyAlert2
-              connection_comps={state.connection_components}
+            <ExportDialog
+              connection_comps={state.configurations}
               appDispatch={dispatch}
             />
           </div>
@@ -134,7 +185,10 @@ function App() {
                 Configurations
               </h2>
               <Card>
-                <ExpandableTableLeft />
+                <ConfigurationsTable
+                  configurations={state.configurations}
+                  appDispatch={dispatch}
+                />
               </Card>
             </div>
           </div>

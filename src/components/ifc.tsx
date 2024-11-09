@@ -1,5 +1,11 @@
 import React, { createRef, useEffect, useState, useRef } from "react";
-import { Color, MeshLambertMaterial } from "three";
+import {
+  Color,
+  Mesh,
+  MeshBasicMaterial,
+  MeshLambertMaterial,
+  SphereGeometry,
+} from "three";
 import { IFCBEAM, IFCCOLUMN } from "web-ifc";
 import { IfcViewerAPI } from "web-ifc-viewer";
 import { Input } from "./ui/input";
@@ -103,6 +109,16 @@ export default function Ifc({
       // const columns = await getIfcElementsByType(model.modelID, IFCCOLUMN);
     }
   };
+
+  function markCollisionPoint(collisionPoint: THREE.Vector3) {
+    const geometry = new SphereGeometry(1, 32, 32);
+    const material = new MeshBasicMaterial({ color: 0xff0000 });
+    const sphere = new Mesh(geometry, material);
+    sphere.position.copy(collisionPoint);
+
+    // Add the sphere to the viewer's scene
+    ifcViewer!.context.scene.add(sphere);
+  }
 
   async function getIfcElementsByType(modelID: number, type: number) {
     const ids = await ifcViewer!.IFC.loader.ifcManager.getAllItemsOfType(

@@ -19,14 +19,6 @@ export default function ModalOption(props: Props) {
       id: id,
     });
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function updateCount(id: number, v: boolean) {
-    confDispatch({
-      type: "change_value",
-      id: id,
-      new_count: v ? config.count + 1 : config.count - 1,
-    });
-  }
 
   return (
     <TableRow key={config.id}>

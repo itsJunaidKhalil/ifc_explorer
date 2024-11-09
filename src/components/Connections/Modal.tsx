@@ -114,16 +114,18 @@ interface Props {
   appDispatch?: React.Dispatch<AppAction>;
 }
 
+function cap(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 export default function Modal({ con, appDispatch }: Props) {
   const { from, to, fromMaterial, toMaterial, amount } = con;
   const [state, dispatch] = useReducer(ModalReducer, configurations);
 
-  const [name, setName] = useState("");
-  const [open, setOpen] = useState(false);
+  const defaultName = cap(from) + " to " + cap(to) + " configuration";
 
-  function cap(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-  }
+  const [name, setName] = useState(defaultName);
+  const [open, setOpen] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const [selectedConfigs, setSelectedConfigs] = useState<Configuration[]>();
@@ -165,16 +167,16 @@ export default function Modal({ con, appDispatch }: Props) {
             </Button>
             <Button
               onClick={() => {
-                const out = state.filter(
-                  (val) => val.selected && val.count !== 0
-                );
+                const out = state.filter((val) => val.selected);
 
                 if (out.length > 0 && appDispatch) {
                   // LOGIC HERE FOR RETURNING SELECTED COMPONENTS FOR CONFIGURATION
                   appDispatch({
                     type: "add_components",
                     conn_comp: {
-                      name: name,
+                      id: 0,
+                      name: name ?? "New Configuration",
+                      count: 1,
                       components: [...out],
                       connection: { ...con },
                     },
