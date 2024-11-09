@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import "./App.css";
+import MyAlert2 from "./components/alerts/MyAlert2";
 import ConnDisplay from "./interfaces/ConnDisplay";
 import { connections } from "./interfaces";
 
@@ -12,7 +13,7 @@ function App() {
       <header className="bg-background border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">My App</h1>
-          <Button>Action</Button>
+          <MyAlert2 />
         </div>
       </header>
 
