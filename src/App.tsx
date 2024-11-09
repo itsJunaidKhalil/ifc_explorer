@@ -5,6 +5,7 @@ import MyAlert2 from "./components/alerts/MyAlert2";
 import ConnDisplay from "./components/Connections/ConnDisplay";
 import { Configuration, ConnComp, Connection, connections } from "./interfaces";
 import { useReducer } from "react";
+import Ifc from "./components/ifc";
 
 
 
@@ -90,7 +91,9 @@ function App() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-3">
-            <Card className="h-full"></Card>
+            <Card className="h-full">
+              <Ifc />
+            </Card>
           </div>
           <div className="col-span-2">
             <Card className="h-full">
