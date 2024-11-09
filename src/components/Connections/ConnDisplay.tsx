@@ -51,7 +51,7 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
             {!conn.visible && (
               <EyeOff
                 color={conn.color}
-                className="ml-2"
+                className="ml-2 cursor-pointer"
                 onClick={() =>
                   appDispatch({
                     type: "toggle_visible_connection",
@@ -63,7 +63,7 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
             {conn.visible && (
               <Eye
                 color={conn.color}
-                className="ml-2"
+                className="ml-2 cursor-pointer"
                 onClick={() =>
                   appDispatch({
                     type: "toggle_visible_connection",
