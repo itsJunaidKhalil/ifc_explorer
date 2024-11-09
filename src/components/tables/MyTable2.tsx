@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { Minus, Plus } from "lucide-react";
-import { Configuration } from "../alerts/MyAlert2";
 import React, { useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { ConnComp } from "@/interfaces";

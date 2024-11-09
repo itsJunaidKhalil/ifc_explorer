@@ -9,6 +9,8 @@ interface Connection {
   to: Element;
   toMaterial: Material;
   amount: number;
+  key: string;
+  visible: boolean;
 }
 
 const connections: Connection[] = [
@@ -18,7 +20,9 @@ const connections: Connection[] = [
     fromMaterial: "STEEL",
     to: "WALL",
     toMaterial: "CONCRETE",
-    amount: 10,
+    amount: 0,
+    key: "COLUMN_WALL",
+    visible: true,
   },
   {
     id: 2,
@@ -26,7 +30,9 @@ const connections: Connection[] = [
     fromMaterial: "STEEL",
     to: "BEAM",
     toMaterial: "CONCRETE",
-    amount: 12,
+    amount: 0,
+    key: "COLUMN_BEAM",
+    visible: true,
   },
   {
     id: 3,
@@ -34,7 +40,9 @@ const connections: Connection[] = [
     fromMaterial: "CONCRETE",
     to: "FOUNDATION",
     toMaterial: "STEEL",
-    amount: 15,
+    amount: 0,
+    key: "COLUMN_FOOTING",
+    visible: true,
   },
   {
     id: 4,
@@ -42,10 +50,60 @@ const connections: Connection[] = [
     fromMaterial: "CONCRETE",
     to: "BEAM",
     toMaterial: "STEEL",
-    amount: 7,
+    amount: 0,
+    key: "WALL_BEAM",
+    visible: true,
   },
-  // { id: 5, from: "WALL", fromMaterial: "STEEL", to: "FOUNDATION", toMaterial: "CONCRETE", amount: 8 },
-  // { id: 6, from: "BEAM", fromMaterial: "STEEL", to: "FOUNDATION", toMaterial: "CONCRETE", amount: 9 }
+  {
+    id: 5,
+    from: "WALL",
+    fromMaterial: "STEEL",
+    to: "FOUNDATION",
+    toMaterial: "CONCRETE",
+    amount: 0,
+    key: "WALL_FOUNDATION",
+    visible: true,
+  },
+  {
+    id: 6,
+    from: "BEAM",
+    fromMaterial: "STEEL",
+    to: "FOUNDATION",
+    toMaterial: "CONCRETE",
+    amount: 0,
+    key: "BEAM_FOOTING",
+    visible: true,
+  },
+  {
+    id: 7,
+    from: "COLUMN",
+    fromMaterial: "STEEL",
+    to: "COLUMN",
+    toMaterial: "CONCRETE",
+    amount: 0,
+    key: "COLUMN_COLUMN",
+    visible: true,
+  },
+  {
+    id: 8,
+    from: "FOUNDATION",
+    fromMaterial: "CONCRETE",
+    to: "FOUNDATION",
+    toMaterial: "CONCRETE",
+    amount: 0,
+    key: "FOOTING_FOOTING",
+    visible: true,
+  },
+  {
+    id: 8,
+    from: "BEAM",
+    fromMaterial: "CONCRETE",
+    to: "BEAM",
+    toMaterial: "CONCRETE",
+    amount: 0,
+    key: "BEAM_BEAM",
+    visible: true,
+  },
 ];
 
 export interface Configuration {
