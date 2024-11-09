@@ -5,6 +5,8 @@ import ConnDisplay from "./components/Connections/ConnDisplay";
 import { Configuration, ConnComp, Connection, connections } from "./interfaces";
 import { useReducer } from "react";
 import Ifc from "./components/ifc";
+import MyTable2 from "./components/tables/MyTable2";
+import ExpandableTableLeft from "./components/configurations-table";
 
 type AppState = {
   unique_id_count: number;
@@ -113,6 +115,10 @@ function App() {
                 <ConnDisplay key={i} {...val} appDispatch={dispatch} />
               ))}
             </div>
+            <h2 className="text-xl font-semibold mb-4 mt-4">Configurations</h2>
+            <Card>
+              <ExpandableTableLeft />
+            </Card>
           </div>
         </div>
       </main>
