@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import "./App.css";
+import ConnDisplay from "./interfaces/ConnDisplay";
+import { connections } from "./interfaces";
 
-async function App() {
+function App() {
+  const conns = connections
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-background border-b">
@@ -18,7 +22,15 @@ async function App() {
             <Card className="h-full"></Card>
           </div>
           <div className="col-span-2">
-            <Card className="h-full"></Card>
+            <Card className="h-full">
+              {
+                connections.map((val, i) => {
+                  // const { from, to, fromMaterial, toMaterial, amount } = props
+                  return <ConnDisplay key={i} {...val} />
+                })
+              }
+
+            </Card>
           </div>
         </div>
       </main>
