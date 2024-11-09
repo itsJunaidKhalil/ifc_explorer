@@ -192,7 +192,7 @@ export default function Modal({ con, appDispatch }: Props) {
               onClick={() => {
                 const out = state.filter((val) => val.selected);
 
-                if (out.length > 0 && appDispatch) {
+                if (appDispatch) {
                   // LOGIC HERE FOR RETURNING SELECTED COMPONENTS FOR CONFIGURATION
                   appDispatch({
                     type: "add_components",
