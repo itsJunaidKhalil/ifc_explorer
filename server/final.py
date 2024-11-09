@@ -19,7 +19,7 @@ columnCount = 0
 footingCount = 0
 
 # Load the IFC file
-model = ifcopenshell.open("./uploads/3_Floors.ifc")
+model = ifcopenshell.open("./uploads/WoodenOffice.ifc")
 
 # Create a
 tree = ifcopenshell.geom.tree()
