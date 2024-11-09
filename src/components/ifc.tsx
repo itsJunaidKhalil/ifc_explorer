@@ -22,11 +22,7 @@ interface Props {
   connections: Connection[];
 }
 
-export default function Ifc({
-  setLoading,
-  appDispatch,
-  connections,
-}: Props) {
+export default function Ifc({ setLoading, appDispatch, connections }: Props) {
   const ifcContainerRef = createRef<HTMLDivElement>();
   const [ifcViewer, setIfcViewer] = useState<IfcViewerAPI>();
   const inputRef = useRef<any>();
@@ -38,7 +34,7 @@ export default function Ifc({
   const [originMaterial, setOriginMaterial] = useState<any>();
   const [viewMode, setViewMode] = useState("transparent");
 
-  const [connectionGroups,] = useState({} as any);
+  const [connectionGroups] = useState({} as any);
 
   const [filename, setFilename] = useState("DummyModel.ifc");
 
@@ -100,6 +96,12 @@ export default function Ifc({
       }
       console.log("loading file", file);
       setUsePreset(false);
+      connections.forEach((connection) => {
+        (connectionGroups as any)[connection.key]?.forEach((mesh: any) =>
+          ifcViewer.context.scene.removeModel(mesh)
+        );
+        connectionGroups[connection.key] = [];
+      });
       setLoading(true);
       const ifcURL = URL.createObjectURL(file);
 
@@ -147,7 +149,9 @@ export default function Ifc({
   }, [ifcViewer, filename, usePreset]);
 
   async function loadConnections() {
-    const a: {[key: string]: any} = await fetch("/" + filename + ".json").then((res) => res.json());
+    const a: { [key: string]: any } = await fetch(
+      "/" + filename + ".json"
+    ).then((res) => res.json());
 
     const connection_amounts = Object.entries(a).map(([key, value]) => {
       return {
