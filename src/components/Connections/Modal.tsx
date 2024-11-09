@@ -15,6 +15,7 @@ import { AppAction } from "@/App";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 const configurations: Configuration[] = [
   {
@@ -129,14 +130,29 @@ export default function Modal({ con, appDispatch }: Props) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const [selectedConfigs, setSelectedConfigs] = useState<Configuration[]>();
+
+  const getLink = (from: string, to: string) => {
+    if (from === "COLUMN" && to === "FOUNDATION") {
+      return "https://www.prodlib.com/search?q=column&q=foundation&lang=en";
+    } else if (from === "COLUMN" && to === "BEAM") {
+      return "https://www.prodlib.com/search?q=column&q=beam&lang=en";
+    } else {
+      return "https://www.prodlib.com/search?q=beam&lang=en";
+    }
+  };
   return (
     <div className="flex flex-col items-start gap-4">
       <Button onClick={() => setOpen(true)}>Select</Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="">
           <DialogHeader>
-            <DialogTitle className="f">
-              New configuration for {cap(from)} to {cap(to)}
+            <DialogTitle className="flex justify-between items-center">
+              <span>
+                New configuration for {cap(from)} to {cap(to)}
+              </span>
+              <a href={`${getLink(from, to)}`} target="blank">
+                <SquareArrowOutUpRight className="cursor-pointer" />
+              </a>
             </DialogTitle>
             <DialogDescription>
               <Badge variant="secondary" className="text-xs">
