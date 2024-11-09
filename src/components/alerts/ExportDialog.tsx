@@ -6,10 +6,11 @@ import {
   AlertDialogTitle as DialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyTable2 from "../tables/MyTable2";
 import { ConnComp } from "@/interfaces";
 import { AppAction } from "@/App";
+import ConfigurationsTable from "../configurations-table";
 
 export interface Configuration {
   id: number;
@@ -18,50 +19,25 @@ export interface Configuration {
   count: number;
 }
 
-const configurations: Configuration[] = [
-  {
-    id: 1,
-    name: "INV001",
-    status: "Paid",
-    count: 250,
-  },
-  {
-    id: 2,
-    name: "INV002",
-    status: "Pending",
-    count: 150,
-  },
-  {
-    id: 3,
-    name: "INV003",
-    status: "Unpaid",
-    count: 350,
-  },
-  {
-    id: 4,
-    name: "INV004",
-    status: "Paid",
-    count: 450,
-  },
-  {
-    id: 5,
-    name: "INV005",
-    status: "Paid",
-    count: 550,
-  },
-];
-
 interface Props {
   connection_comps: ({ id: number } & ConnComp)[];
-  appDispatch?: React.Dispatch<AppAction>;
+  appDispatch: React.Dispatch<AppAction>;
 }
 
 export default function ExportDialog({ connection_comps, appDispatch }: Props) {
   const [open, setOpen] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [data, setData] = useState<any>(connection_comps);
+
+  useEffect(() => {
+    setSelectedConfigs(connection_comps)
+  }, [connection_comps])
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedConfigs, setSelectedConfigs] =
-    useState<Configuration[]>(configurations);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useState<any>(connection_comps);
   return (
     <div className="flex flex-col items-start gap-4">
       <Button onClick={() => setOpen(true)}>Export</Button>
@@ -71,10 +47,7 @@ export default function ExportDialog({ connection_comps, appDispatch }: Props) {
             <DialogTitle>Configurations for checkout</DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto max-h-[60vh]">
-            <MyTable2
-              configurations={connection_comps}
-              appDispatch={appDispatch}
-            />
+              <MyTable2 configurations={selectedConfigs} appDispatch={appDispatch}/>
           </div>
           <DialogFooter className="sm:justify-start gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
@@ -84,11 +57,11 @@ export default function ExportDialog({ connection_comps, appDispatch }: Props) {
               onClick={() => {
                 console.log(
                   "Selected configurations:",
-                  configurations.filter(
-                    (config) =>
-                      selectedConfigs.some((c) => c.id === config.id) &&
-                      config.count > 0
-                  )
+                  // configurations.filter(
+                  //   (config) =>
+                  //     selectedConfigs.some((c) => c.id === config.id) &&
+                  //     config.count > 0
+                  // )
                 );
                 setOpen(false);
               }}

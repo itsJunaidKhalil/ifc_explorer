@@ -41,19 +41,19 @@ export default function ConnDisplay(props: Props) {
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-lg font-semibold">
           {cap(from)} to {cap(to)}
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="grow">
         <Badge variant="secondary" className="text-xs">
           {cap(fromMaterial)} to {cap(toMaterial)}
         </Badge>
       </CardContent>
-      <CardFooter className="flex items-center justify-between">
-        <div className="text-sm font-medium">Amount: {amount}</div>
+      <CardFooter className="flex items-center justify-between gap-2">
+        <div className="text-sm font-medium text-center">Amount: {amount}</div>
         <Modal con={props} appDispatch={appDispatch} />
       </CardFooter>
     </Card>

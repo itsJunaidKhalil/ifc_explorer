@@ -143,7 +143,8 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   console.log(state);
-
+  console.log('-------------')
+  console.log(state.configurations)
   return (
     <div>
       {loading && (
