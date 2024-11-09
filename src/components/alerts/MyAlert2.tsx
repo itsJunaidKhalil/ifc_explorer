@@ -6,8 +6,10 @@ import {
   AlertDialogTitle as DialogTitle
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import React, { useState } from "react";
 import MyTable2 from "../tables/MyTable2";
+import { ConnComp } from "@/interfaces";
+import { AppAction } from "@/App";
 
 export interface Configuration {
   id: number
@@ -49,22 +51,27 @@ const configurations: Configuration[] = [
   },
 ];
 
-export default function MyAlert2() {
+interface Props {
+  connection_comps: ({ id: number } & ConnComp)[]
+  appDispatch?: React.Dispatch<AppAction>
+}
 
-  const [open, setOpen] = useState(false);  
+export default function MyAlert2({ connection_comps, appDispatch }: Props) {
+
+  const [open, setOpen] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedConfigs, setSelectedConfigs] = useState<Configuration[]>(configurations);
   return (
     <div className="flex flex-col items-start gap-4">
-      <Button onClick={() => setOpen(true)}>Show Dialog</Button>
+      <Button onClick={() => setOpen(true)}>Show Cart</Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Configurations for checkout</DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto max-h-[60vh]">
-            <MyTable2 configurations={configurations} selectedConfigs={selectedConfigs}/>
+            <MyTable2 configurations={connection_comps} appDispatch={appDispatch} />
           </div>
           <DialogFooter className="sm:justify-start gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>

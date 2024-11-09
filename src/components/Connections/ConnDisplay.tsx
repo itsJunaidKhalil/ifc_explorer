@@ -1,12 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Connection, Element, Material } from ".";
+import { Connection } from "../../interfaces";
+import MyAlert2 from "../alerts/MyAlert2";
+import Modal from "./Modal";
+import { AppAction } from "@/App";
 
+type Props = Connection & { appDispatch?: React.Dispatch<AppAction> }
 
-export default function ConnDisplay(props: Connection) {
-    const { from, to, fromMaterial, toMaterial, amount } = props
+export default function ConnDisplay(props: Props) {
+    const { from, to, fromMaterial, toMaterial, amount, appDispatch } = props
     const [checked, setChecked] = useState(false)
 
     if (!(from || to || fromMaterial || toMaterial || amount)) {
@@ -19,11 +22,11 @@ export default function ConnDisplay(props: Connection) {
     }
 
 
-    const handleConfigureClick = () => {
-        // ANYTHING THAT THE CONFIGURE SHOULD RUN OR REVEAL...
-        console.log("CONFIGURE")
-        props
-    }
+    // const handleConfigureClick = () => {
+    //     // ANYTHING THAT THE CONFIGURE SHOULD RUN OR REVEAL...
+    //     console.log("CONFIGURE")
+    //     props
+    // }
 
     const handleCheckedChange = () => {
         setChecked(!checked)
@@ -50,10 +53,10 @@ export default function ConnDisplay(props: Connection) {
             <p>
                 {amount}
             </p>
-            <div className="items-center">
+            <div className="flex items-center">
 
                 <Checkbox className=" mx-2 my-0" checked={checked} onCheckedChange={handleCheckedChange} />
-                <Button onClick={handleConfigureClick} className="">Configure</Button>
+                <Modal con={props} appDispatch={appDispatch} />
             </div>
         </div>
     </Card>
