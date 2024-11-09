@@ -158,9 +158,8 @@ export default function Ifc({
       {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Input id="picture" type="file" accept=".ifc" onChange={ifcOnLoad}  />
         </div> */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 py-2">
         <Button
-          className="ml-5"
           variant="default"
           size="default"
           onClick={() => uploadIfcFile()}
@@ -170,7 +169,7 @@ export default function Ifc({
         </Button>
         <Button onClick={() => setIsTransparent(!isTransparent)}>
           <Blend />
-          {isTransparent ? "Transparent" : "See transparent"}
+          {isTransparent ? "Normal" : "Transparent"}
         </Button>
       </div>
       <input
