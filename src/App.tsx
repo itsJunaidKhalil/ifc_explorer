@@ -16,19 +16,19 @@ type AppState = {
 
 export type AppAction =
   | {
-      type: "add_components";
-      conn_comp: ConnComp;
-    }
+    type: "add_components";
+    conn_comp: ConnComp;
+  }
   | {
-      type: "remove_component";
-      id: number;
-    }
+    type: "remove_component";
+    id: number;
+  }
   | { type: "ADD_CONFIGURATION"; payload: Configuration }
   | { type: "RESET_COMPONENTS" }
   | { type: "RESET" };
 
 const AppReducer = (state: AppState, action: AppAction): AppState => {
-  let count = 0;
+  // let count = 0;
   switch (action.type) {
     // case 'ADD_CONFIGURATION':
     // return [...state, action.payload];
