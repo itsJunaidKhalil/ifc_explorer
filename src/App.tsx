@@ -47,7 +47,18 @@ export type AppAction =
   | { type: "RESET" };
 
 const AppReducer = (state: AppState, action: AppAction): AppState => {
+  const connection1 = state.connections.find(
+    (conn) =>
+      state.configurations.find((val) => 'id' in action && val.id === action.id)?.connection
+        .id === conn.id
+  )!;
   // let count = 0;
+
+  const connection2 = state.connections.find(
+    (conn) =>
+      state.configurations.find((val) => "id" in action && val.id === action.id)
+        ?.connection.id === conn.id
+  )!;
   switch (action.type) {
     // case 'ADD_CONFIGURATION':
     // return [...state, action.payload];
@@ -100,11 +111,6 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
         }),
       };
     case "increment_configuration":
-      const connection1 = state.connections.find(
-        (conn) =>
-          state.configurations.find((val) => val.id === action.id)?.connection
-            .id === conn.id
-      )!;
       return {
         ...state,
         configurations: state.configurations.map((val) => {
@@ -121,11 +127,6 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
         }),
       };
     case "decrement_configuration":
-      const connection2 = state.connections.find(
-        (conn) =>
-          state.configurations.find((val) => val.id === action.id)?.connection
-            .id === conn.id
-      )!;
       return {
         ...state,
         configurations: state.configurations
@@ -172,8 +173,8 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   console.log(state);
-  console.log('-------------')
-  console.log(state.configurations)
+  console.log("-------------");
+  console.log(state.configurations);
   return (
     <div>
       {loading && (
