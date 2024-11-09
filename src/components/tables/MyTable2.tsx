@@ -18,8 +18,6 @@ interface Props {
   appDispatch: React.Dispatch<AppAction>;
 }
 const MyTable2 = ({ configurations, appDispatch }: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [checked, setChecked] = useState(false);
 
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
 
@@ -117,7 +115,9 @@ const MyTable2 = ({ configurations, appDispatch }: Props) => {
             </TableRow>
             {expandedRows[config.id] && (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={1}>
+                </TableCell>
+                <TableCell colSpan={3}>
                   {config.components.map((comp) => (
                     <li key={comp.id}>{comp.name}</li>
                   ))}

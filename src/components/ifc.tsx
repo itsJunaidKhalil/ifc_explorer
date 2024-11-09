@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createRef, useEffect, useState, useRef } from "react";
 import {
   Color,
@@ -13,30 +14,15 @@ import { Upload, Blend } from "lucide-react";
 import ViewDropdown from "./ViewDropdown";
 import { AppAction } from "@/App";
 import { Connection } from "@/interfaces";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 
 interface Props {
-  isTransparent: boolean;
-  loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsTransparent: React.Dispatch<React.SetStateAction<boolean>>;
   appDispatch: React.Dispatch<AppAction>;
   connections: Connection[];
 }
 
 export default function Ifc({
-  isTransparent,
   setLoading,
-  loading,
-  setIsTransparent,
   appDispatch,
   connections,
 }: Props) {
@@ -51,7 +37,7 @@ export default function Ifc({
   const [originMaterial, setOriginMaterial] = useState<any>();
   const [viewMode, setViewMode] = useState("transparent");
 
-  const [connectionGroups, setConnectionGroups] = useState({} as any);
+  const [connectionGroups,] = useState({} as any);
 
   const [filename, setFilename] = useState("DummyModel.ifc");
 
@@ -161,7 +147,7 @@ export default function Ifc({
   }, [ifcViewer, filename, usePreset]);
 
   async function loadConnections() {
-    const a = await fetch("/" + filename + ".json").then((res) => res.json());
+    const a: {[key: string]: any} = await fetch("/" + filename + ".json").then((res) => res.json());
 
     const connection_amounts = Object.entries(a).map(([key, value]) => {
       return {

@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import MyTable2 from "../tables/MyTable2";
 import { ConnComp } from "@/interfaces";
 import { AppAction } from "@/App";
-import ConfigurationsTable from "../configurations-table";
 
 export interface Configuration {
   id: number;
@@ -26,9 +25,6 @@ interface Props {
 
 export default function ExportDialog({ connection_comps, appDispatch }: Props) {
   const [open, setOpen] = useState(false);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [data, setData] = useState<any>(connection_comps);
 
   useEffect(() => {
     setSelectedConfigs(connection_comps)

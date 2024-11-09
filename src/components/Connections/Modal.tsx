@@ -7,7 +7,7 @@ import {
   AlertDialogDescription as DialogDescription,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import React, { act, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 // import MyTable2 from "../tables/MyTable2";
 import { Configuration, Connection } from "@/interfaces";
 import ModalOptions from "./ModalOptions";
@@ -119,7 +119,7 @@ function cap(string: string) {
 }
 
 export default function Modal({ con, appDispatch }: Props) {
-  const { from, to, fromMaterial, toMaterial, amount } = con;
+  const { from, to, fromMaterial, toMaterial } = con;
   const [state, dispatch] = useReducer(ModalReducer, configurations);
 
   const defaultName = cap(from) + " to " + cap(to) + " configuration";

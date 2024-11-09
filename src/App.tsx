@@ -169,7 +169,6 @@ function App() {
     configurations: [],
     connections: connections,
   });
-  const [isTransparent, setIsTransparent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   console.log(state);
@@ -204,9 +203,6 @@ function App() {
             <div className="lg:col-span-3">
               <Card className="h-full">
                 <Ifc
-                  isTransparent={isTransparent}
-                  setIsTransparent={setIsTransparent}
-                  loading={loading}
                   setLoading={setLoading}
                   appDispatch={dispatch}
                   connections={state.connections}
@@ -218,7 +214,7 @@ function App() {
               <h2 className="text-xl font-semibold mb-4">Connections</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {state.connections.map(
-                  (val, i) =>
+                  (val) =>
                     val.amount > 0 && (
                       <ConnDisplay
                         conn={val}

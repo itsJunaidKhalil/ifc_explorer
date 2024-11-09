@@ -1,10 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@/components/ui/table";
 import { ModalAction } from "./Modal";
 // import { useState } from "react";
@@ -22,7 +18,7 @@ const ModalOptions = ({ configurations, confDispatch }: Props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  const totalAmount = configurations.filter((val) => val.selected).length;
+  // const totalAmount = configurations.filter((val) => val.selected).length;
   return (
     <Card>
       <Table>

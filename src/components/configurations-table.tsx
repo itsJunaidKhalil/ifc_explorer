@@ -11,15 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Configuration, ConnComp } from "@/interfaces";
+import { ConnComp } from "@/interfaces";
 import { AppAction } from "@/App";
 
-type TableData = {
-  id: number;
-  type: string;
-  name: string;
-  amount: number;
-};
 
 type Props = {
   configurations: ConnComp[];

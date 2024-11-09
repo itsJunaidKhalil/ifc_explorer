@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { File, ChevronDown, ChevronRight } from "lucide-react";
+import { File, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

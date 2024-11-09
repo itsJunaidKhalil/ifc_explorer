@@ -1,6 +1,4 @@
 import { Checkbox } from "../ui/checkbox";
-import { Minus, Plus } from "lucide-react";
-import { Button } from "../ui/button";
 import { TableRow, TableCell } from "../ui/table";
 import { ModalAction } from "./Modal";
 import { Configuration } from "@/interfaces";
@@ -21,17 +19,18 @@ export default function ModalOption(props: Props) {
   }
 
   return (
-    <TableRow key={config.id}>
-      <TableCell>
-        <Checkbox
-          checked={config.selected}
-          onCheckedChange={() => toggleConfig(config.id)}
-        />
-      </TableCell>
-      <TableCell>{config.name}</TableCell>
-      <TableCell className="text-right">
-        <div className=""></div>
-      </TableCell>
+    <TableRow key={config.id} onClick={() => toggleConfig(config.id)}>
+        <TableCell>
+          <Checkbox
+            checked={config.selected}
+            onClick={event => event.preventDefault()}
+            onCheckedChange={() => toggleConfig(config.id)}
+          />
+        </TableCell>
+        <TableCell>{config.name}</TableCell>
+        <TableCell className="text-right">
+          <div className=""></div>
+        </TableCell>
     </TableRow>
   );
 }

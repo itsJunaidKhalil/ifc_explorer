@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
 import { Connection } from "../../interfaces";
 import { Badge } from "../ui/badge";
 import Modal from "./Modal";
@@ -19,7 +18,6 @@ type Props = {
 
 export default function ConnDisplay({ conn, appDispatch }: Props) {
   const { from, to, fromMaterial, toMaterial, amount } = conn;
-  const [checked, setChecked] = useState(false);
 
   if (!(from || to || fromMaterial || toMaterial || amount)) {
     return (
@@ -88,17 +86,17 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
   );
 }
 
-function getMissingFields(props: Connection) {
-  const missingFields = [];
-  const { from, to, fromMaterial, toMaterial, amount } = props;
+// function getMissingFields(props: Connection) {
+//   const missingFields = [];
+//   const { from, to, fromMaterial, toMaterial, amount } = props;
 
-  if (!from) missingFields.push("from");
-  if (!to) missingFields.push("to");
-  if (!fromMaterial) missingFields.push("fromMaterial");
-  if (!toMaterial) missingFields.push("toMaterial");
-  if (!amount) missingFields.push("amount");
+//   if (!from) missingFields.push("from");
+//   if (!to) missingFields.push("to");
+//   if (!fromMaterial) missingFields.push("fromMaterial");
+//   if (!toMaterial) missingFields.push("toMaterial");
+//   if (!amount) missingFields.push("amount");
 
-  return missingFields.length > 0
-    ? `Missing fields: ${missingFields.join(", ")}`
-    : "All fields are present";
-}
+//   return missingFields.length > 0
+//     ? `Missing fields: ${missingFields.join(", ")}`
+//     : "All fields are present";
+// }
