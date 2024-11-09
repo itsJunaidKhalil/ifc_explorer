@@ -46,8 +46,8 @@ export default function ExportDialog({ connection_comps, appDispatch }: Props) {
     useState<any[]>(connection_comps);
   return (
     <div className="flex flex-col items-start gap-4">
-      <Button onClick={() => setOpen(true)}>Export</Button>
-      <Dialog open={open} onOpenChange={setOpen} className="printable">
+      <Button onClick={() => setOpen(true)} disabled={connection_comps.length === 0}>Export</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Configurations for checkout</DialogTitle>
