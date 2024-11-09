@@ -96,7 +96,7 @@ function App() {
     <div>
       {loading && (
         <div className="overlay fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <span className="font-semibold text-lg">Building the 3d Model</span>
+          <span className="font-semibold text-lg">Building the 3d Model, please wait...</span>
         </div>
       )}
       <div className="min-h-screen flex flex-col">
