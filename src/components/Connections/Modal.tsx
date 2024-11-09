@@ -169,7 +169,9 @@ export default function Modal({ con, appDispatch }: Props) {
 
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
             <Label htmlFor="name">Name</Label>
-            <span className="text-gray-500 text-xs">Please enter the name of the configuration</span>
+            <span className="text-gray-500 text-xs">
+              Please enter the name of the configuration
+            </span>
             <Input
               id="name"
               value={name}
@@ -181,7 +183,10 @@ export default function Modal({ con, appDispatch }: Props) {
               className="min-w-full"
             ></Input>
           </div>
-          <Label className="mt-5">Select which components you want for your configurations</Label>
+          <Label className="-mb-3">Components</Label>
+          <span className="-mb-2 text-gray-500 text-xs">
+            Select which components you want for your configurations
+          </span>
           <div className="overflow-y-auto max-h-[60vh]">
             <ModalOptions configurations={state} confDispatch={dispatch} />
           </div>
