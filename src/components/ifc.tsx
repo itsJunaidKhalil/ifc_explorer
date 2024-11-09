@@ -12,6 +12,8 @@ import { Input } from "./ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Upload, Blend } from "lucide-react";
+import { DropdownMenu } from "./ui/dropdown-menu";
+import ViewDropdown from "./ViewDropdown";
 
 interface Props {
   isTransparent: boolean;
@@ -35,6 +37,8 @@ export default function Ifc({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [originMaterial, setOriginMaterial] = useState<any>();
+  const [viewMode, setViewMode] = useState("normal");
+
 
   useEffect(() => {
     if (ifcContainerRef.current) {
@@ -62,19 +66,23 @@ export default function Ifc({
     if (!ifcModel) return;
     console.log(originMaterial, ifcModel.material);
 
-    if (isTransparent) {
-      ifcModel.material = new MeshLambertMaterial({
-        // color: 0xffffff,
-        transparent: true,
-        opacity: 0.5,
-      });
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ifcModel.material = originMaterial.map(
-        (oM: any) => new MeshLambertMaterial(oM)
-      );
+    switch (viewMode) {
+      case "transparent":
+        ifcModel.material = new MeshLambertMaterial({
+          // color: 0xffffff,
+          transparent: true,
+          opacity: 0.5,
+        });
+        break;
+      case 'normal':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ifcModel.material = originMaterial.map(
+          (oM: any) => new MeshLambertMaterial(oM)
+        );
+        break
+
     }
-  }, [isTransparent]);
+  }, [viewMode]);
 
   const ifcOnLoad = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e && e.target && e.target.files && e.target.files[0];
@@ -167,9 +175,10 @@ export default function Ifc({
           <Upload />
           <span>Upload Model</span>
         </Button>
-        <Button onClick={() => setIsTransparent(!isTransparent)}>
+        <ViewDropdown setValue={setViewMode} value={viewMode}/>
+        <Button onClick={() => setViewMode(viewMode === 'transparent' ? 'normal' : 'transparent' )} className="capitalize">
           <Blend />
-          {isTransparent ? "Normal" : "Transparent"}
+          {viewMode}
         </Button>
       </div>
       <input

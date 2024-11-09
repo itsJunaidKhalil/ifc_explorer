@@ -8,6 +8,7 @@ import ExpandableTableLeft from "./components/configurations-table";
 import { Button } from "./components/ui/button";
 import ConfigurationsTable from "./components/configurations-table";
 import ExportDialog from "./components/alerts/ExportDialog";
+import trollWebp from "./assets/troll_1f9cc.webp";
 
 type AppState = {
   unique_id_count: number;
@@ -153,7 +154,10 @@ function App() {
       <div className="min-h-screen flex flex-col">
         <header className="bg-background border-b">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
-            <h1 className="text-2xl font-bold">IFCTroll 🧌</h1>
+            <h1 className="text-2xl font-bold">IFCTroll 
+              <img src={trollWebp} className="inline h-6 w-6 ms-2"/>
+            </h1>
+            {/* 🧌 */}
             <ExportDialog
               connection_comps={state.configurations}
               appDispatch={dispatch}
