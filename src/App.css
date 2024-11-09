@@ -1,0 +1,15 @@
+@media print {
+  /* Hide non-essential content */
+  .non-printable {
+    display: none;
+  }
+
+  /* Ensure main content fits within a single page */
+  .printable {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Adjust margins, paddings, or font sizes if necessary */
+}

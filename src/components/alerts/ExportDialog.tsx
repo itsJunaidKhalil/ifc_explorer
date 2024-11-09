@@ -30,39 +30,45 @@ export default function ExportDialog({ connection_comps, appDispatch }: Props) {
     setSelectedConfigs(connection_comps)
   }, [connection_comps])
 
+  const [rows, setRows] = useState<Record<number, boolean>>({})
+
+  useEffect(() => {
+    console.log(Object.keys(rows).length)
+    if (Object.keys(rows).length !== 0) {
+      setTimeout(() => {
+        window.print();
+      }, 100)
+    }
+  }, [rows])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedConfigs, setSelectedConfigs] =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useState<any>(connection_comps);
+    useState<any[]>(connection_comps);
   return (
     <div className="flex flex-col items-start gap-4">
       <Button onClick={() => setOpen(true)}>Export</Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen} className="printable">
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Configurations for checkout</DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto max-h-[60vh]">
-              <MyTable2 configurations={selectedConfigs} appDispatch={appDispatch}/>
+              <MyTable2 configurations={selectedConfigs} appDispatch={appDispatch} defaultExpandedRows={rows}/>
           </div>
-          <DialogFooter className="sm:justify-start gap-2">
+          <DialogFooter className="sm:justify-end gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button
               onClick={() => {
-                console.log(
-                  "Selected configurations:",
-                  // configurations.filter(
-                  //   (config) =>
-                  //     selectedConfigs.some((c) => c.id === config.id) &&
-                  //     config.count > 0
-                  // )
-                );
-                setOpen(false);
+                setRows(selectedConfigs.reduce((accumulator: Record<number, boolean>, c: ({ id: number } & ConnComp)) => {
+                  const aValue = accumulator;
+                  aValue[c.id] = true;
+                  return aValue
+                }, {}));
               }}
             >
-              Send
+              Print
             </Button>
           </DialogFooter>
         </DialogContent>

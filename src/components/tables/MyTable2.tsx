@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { ChevronDown, ChevronRight, Minus, Plus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { ConnComp } from "@/interfaces";
 import { AppAction } from "@/App";
@@ -16,9 +16,14 @@ import { AppAction } from "@/App";
 interface Props {
   configurations: ({ id: number } & ConnComp)[];
   appDispatch: React.Dispatch<AppAction>;
+  defaultExpandedRows?: Record<number, boolean>;
 }
-const MyTable2 = ({ configurations, appDispatch }: Props) => {
-  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
+const MyTable2 = ({ configurations, appDispatch, defaultExpandedRows = [] }: Props) => {
+  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>(defaultExpandedRows);
+
+  useEffect(() => {
+    setExpandedRows(defaultExpandedRows);
+  }, [defaultExpandedRows]);
 
   const toggleRowExpanded = (rowId: number) => {
     setExpandedRows((prev) => ({
