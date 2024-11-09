@@ -175,7 +175,6 @@ export default function Modal({ con, appDispatch }: Props) {
               }}
               placeholder="Configuration Name"
               className="min-w-full"
-              autoFocus
             ></Input>
           </div>
           <Label className="-mb-3">Components</Label>
