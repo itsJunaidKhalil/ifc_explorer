@@ -86,7 +86,6 @@ const connections: Connection[] = [
 export interface Configuration {
   id: number;
   name: string;
-  status: "Paid" | "Pending" | "Unpaid";
   count: number;
   selected: boolean;
 }
