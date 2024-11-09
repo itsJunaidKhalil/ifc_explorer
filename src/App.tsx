@@ -185,7 +185,7 @@ function App() {
         </div>
       )}
       <div className="min-h-screen flex flex-col">
-        <header className="bg-background border-b">
+        <header className="bg-background border-b sticky top-0">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
             <h1 className="text-2xl font-bold">
               IFCTroll
@@ -213,7 +213,7 @@ function App() {
             </div>
             <div className="lg:col-span-2">
               <h2 className="text-xl font-semibold mb-4">Connections</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className=" flex flex-col justify-content-center sm:grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {state.connections.map(
                   (val) =>
                     val.amount > 0 && (

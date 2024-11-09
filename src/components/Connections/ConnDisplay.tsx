@@ -41,7 +41,7 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
   }
 
   return (
-    <Card className="w-full max-w-sm flex flex-col">
+    <Card className="w-full sm:max-w-sm flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-lg font-semibold flex justify-between w-full">
           <div>
