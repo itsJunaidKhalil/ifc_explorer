@@ -118,7 +118,7 @@ export default function Modal({ con, appDispatch }: Props) {
     // const [selectedConfigs, setSelectedConfigs] = useState<Configuration[]>();
     return (
         <div className="flex flex-col items-start gap-4">
-            <Button onClick={() => setOpen(true)}>Show Modal</Button>
+            <Button onClick={() => setOpen(true)}>Select</Button>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>

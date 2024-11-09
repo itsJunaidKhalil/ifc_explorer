@@ -83,7 +83,7 @@ export default function () {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-[80vh]">
       <div ref={ifcContainerRef} className="h-full" />
       <input type="file" accept=".ifc" onChange={ifcOnLoad} />
     </div>

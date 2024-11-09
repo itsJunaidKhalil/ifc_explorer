@@ -64,7 +64,7 @@ export default function MyAlert2({ connection_comps, appDispatch }: Props) {
   const [selectedConfigs, setSelectedConfigs] = useState<Configuration[]>(configurations);
   return (
     <div className="flex flex-col items-start gap-4">
-      <Button onClick={() => setOpen(true)}>Show Cart</Button>
+      <Button onClick={() => setOpen(true)}>Export</Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
