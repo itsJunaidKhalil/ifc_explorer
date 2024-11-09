@@ -136,6 +136,12 @@ export default function Modal({ con, appDispatch }: Props) {
       return "https://www.prodlib.com/search?q=column&q=foundation&lang=en";
     } else if (from === "COLUMN" && to === "BEAM") {
       return "https://www.prodlib.com/search?q=column&q=beam&lang=en";
+    } else if (from === "BEAM" && to === "FOUNDATION") {
+      return "https://www.prodlib.com/search?q=beam&q=foundation&lang=en";
+    } else if (from === "COLUMN" && to === "COLUMN") {
+      return "https://www.prodlib.com/search?q=column&lang=en";
+    } else if (from === "FOUNDATION" && to === "FOUNDATION") {
+      return "https://www.prodlib.com/search?q=foundation&lang=en";
     } else {
       return "https://www.prodlib.com/search?q=beam&lang=en";
     }
