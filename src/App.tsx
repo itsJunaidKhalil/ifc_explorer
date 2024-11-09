@@ -4,8 +4,6 @@ import ConnDisplay from "./components/Connections/ConnDisplay";
 import { Configuration, ConnComp, Connection, connections } from "./interfaces";
 import { useReducer, useState } from "react";
 import Ifc from "./components/ifc";
-import ExpandableTableLeft from "./components/configurations-table";
-import { Button } from "./components/ui/button";
 import ConfigurationsTable from "./components/configurations-table";
 import ExportDialog from "./components/alerts/ExportDialog";
 import trollWebp from "./assets/troll_1f9cc.webp";
@@ -33,12 +31,23 @@ export type AppAction =
       type: "decrement_configuration";
       id: number;
     }
+  | {
+      type: "set_connection_amounts";
+      connection_amounts: {
+        key: string;
+        amount: number;
+      }[];
+    }
+  | {
+      type: "toggle_visible_connection";
+      key: string;
+    }
   | { type: "ADD_CONFIGURATION"; payload: Configuration }
   | { type: "RESET_COMPONENTS" }
   | { type: "RESET" };
 
 const AppReducer = (state: AppState, action: AppAction): AppState => {
-  let count = 0;
+  // let count = 0;
   switch (action.type) {
     // case 'ADD_CONFIGURATION':
     // return [...state, action.payload];
@@ -54,6 +63,27 @@ const AppReducer = (state: AppState, action: AppAction): AppState => {
       return {
         ...state,
         configurations: [],
+      };
+    case "set_connection_amounts":
+      return {
+        ...state,
+        connections: state.connections.map((conn) => {
+          const count =
+            action.connection_amounts.find((val) => val.key === conn.key)
+              ?.amount ?? 0;
+          return { ...conn, amount: count };
+        }),
+        configurations: [],
+      };
+    case "toggle_visible_connection":
+      return {
+        ...state,
+        connections: state.connections.map((conn) => {
+          if (conn.key === action.key) {
+            return { ...conn, visible: !conn.visible };
+          }
+          return conn;
+        }),
       };
     case "add_components":
       return {
@@ -149,14 +179,17 @@ function App() {
     <div>
       {loading && (
         <div className="overlay fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <span className="font-semibold text-lg">Building the 3d Model, please wait...</span>
+          <span className="font-semibold text-lg">
+            Building the 3d Model, please wait...
+          </span>
         </div>
       )}
       <div className="min-h-screen flex flex-col">
         <header className="bg-background border-b">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
-            <h1 className="text-2xl font-bold">IFCTroll 
-              <img src={trollWebp} className="inline h-6 w-6 ms-2"/>
+            <h1 className="text-2xl font-bold">
+              IFCTroll
+              <img src={trollWebp} className="inline h-6 w-6 ms-2" />
             </h1>
             {/* 🧌 */}
             <ExportDialog
@@ -175,6 +208,8 @@ function App() {
                   setIsTransparent={setIsTransparent}
                   loading={loading}
                   setLoading={setLoading}
+                  appDispatch={dispatch}
+                  connections={state.connections}
                 />
               </Card>
               {/* <Button onClick={() => setIsTransparent(!isTransparent)}>{isTransparent ? 'Transparent' : 'See transparent'}</Button> */}
@@ -182,19 +217,30 @@ function App() {
             <div className="lg:col-span-2">
               <h2 className="text-xl font-semibold mb-4">Connections</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {state.connections.map((val, i) => (
-                  <ConnDisplay key={i} {...val} appDispatch={dispatch} />
-                ))}
+                {state.connections.map(
+                  (val, i) =>
+                    val.amount > 0 && (
+                      <ConnDisplay
+                        conn={val}
+                        key={val.key}
+                        appDispatch={dispatch}
+                      />
+                    )
+                )}
               </div>
-              <h2 className="text-xl font-semibold mb-4 mt-4">
-                Configurations
-              </h2>
-              <Card>
-                <ConfigurationsTable
-                  configurations={state.configurations}
-                  appDispatch={dispatch}
-                />
-              </Card>
+              {state.configurations.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mb-4 mt-4">
+                    Configurations
+                  </h2>
+                  <Card>
+                    <ConfigurationsTable
+                      configurations={state.configurations}
+                      appDispatch={dispatch}
+                    />
+                  </Card>
+                </>
+              )}
             </div>
           </div>
         </main>

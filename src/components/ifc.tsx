@@ -5,21 +5,31 @@ import {
   MeshBasicMaterial,
   MeshLambertMaterial,
   SphereGeometry,
+  Vector3,
 } from "three";
-import { IFCBEAM, IFCCOLUMN } from "web-ifc";
 import { IfcViewerAPI } from "web-ifc-viewer";
-import { Input } from "./ui/input";
-import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Upload, Blend } from "lucide-react";
-import { DropdownMenu } from "./ui/dropdown-menu";
 import ViewDropdown from "./ViewDropdown";
+import { AppAction } from "@/App";
+import { Connection } from "@/interfaces";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface Props {
   isTransparent: boolean;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTransparent: React.Dispatch<React.SetStateAction<boolean>>;
+  appDispatch: React.Dispatch<AppAction>;
+  connections: Connection[];
 }
 
 export default function Ifc({
@@ -27,6 +37,8 @@ export default function Ifc({
   setLoading,
   loading,
   setIsTransparent,
+  appDispatch,
+  connections,
 }: Props) {
   const ifcContainerRef = createRef<HTMLDivElement>();
   const [ifcViewer, setIfcViewer] = useState<IfcViewerAPI>();
@@ -37,8 +49,13 @@ export default function Ifc({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [originMaterial, setOriginMaterial] = useState<any>();
-  const [viewMode, setViewMode] = useState("normal");
+  const [viewMode, setViewMode] = useState("transparent");
 
+  const [connectionGroups, setConnectionGroups] = useState({} as any);
+
+  const [filename, setFilename] = useState("DummyModel.ifc");
+
+  const [usePreset, setUsePreset] = useState(true);
 
   useEffect(() => {
     if (ifcContainerRef.current) {
@@ -51,14 +68,11 @@ export default function Ifc({
       ifcViewer.axes.setAxes();
 
       ifcViewer.IFC.loader.ifcManager.applyWebIfcConfig({
-        COORDINATE_TO_ORIGIN: true,
+        COORDINATE_TO_ORIGIN: false,
         USE_FAST_BOOLS: true,
       });
-      ifcViewer.IFC.loadIfcUrl("/DummyModel.ifc", true).then((model) => {
-        setIfcModel(model);
-        setOriginMaterial(model.material);
-      });
       setIfcViewer(ifcViewer);
+      setFilename("DummyModel.ifc");
     }
   }, []);
 
@@ -74,21 +88,31 @@ export default function Ifc({
           opacity: 0.5,
         });
         break;
-      case 'normal':
+      case "normal":
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ifcModel.material = originMaterial.map(
           (oM: any) => new MeshLambertMaterial(oM)
         );
-        break
-
+        break;
     }
-  }, [viewMode]);
+  }, [viewMode, ifcModel]);
+
+  useEffect(() => {
+    connections.forEach((connection) => {
+      (connectionGroups as any)[connection.key]?.forEach(
+        (mesh: any) => (mesh.visible = connection.visible)
+      );
+    });
+  }, [connections]);
 
   const ifcOnLoad = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e && e.target && e.target.files && e.target.files[0];
     if (file && ifcViewer) {
-      ifcViewer.context.scene.removeModel(ifcModel!);
+      if (ifcModel) {
+        ifcViewer.context.scene.removeModel(ifcModel!);
+      }
       console.log("loading file", file);
+      setUsePreset(false);
       setLoading(true);
       const ifcURL = URL.createObjectURL(file);
 
@@ -97,60 +121,83 @@ export default function Ifc({
       if (model) {
         setLoading(false);
       }
-      console.log(model.material);
       setOriginMaterial(model.material);
-
-      // Set transparent material
-      // eslint-disable-next-line no-constant-condition
-      // if (isTransparent) {
-      //   model.material = new MeshLambertMaterial({
-      //     color: 0xffffff,
-      //     transparent: true,
-      //     opacity: 0.5,
-      //   });
-      // }
-
-      // Render shadow
-      // await ifcViewer.shadowDropper.renderShadow(model.modelID);
-
-      // const beams = await getIfcElementsByType(model.modelID, IFCBEAM);
-      // const columns = await getIfcElementsByType(model.modelID, IFCCOLUMN);
+      setFilename(file.name);
+      loadConnections();
     }
   };
 
+  useEffect(() => {
+    if (!usePreset) {
+      return;
+    }
+    if (ifcViewer) {
+      if (filename) {
+        if (ifcModel) {
+          ifcViewer.context.scene.removeModel(ifcModel!);
+        }
+
+        connections.forEach((connection) => {
+          (connectionGroups as any)[connection.key]?.forEach((mesh: any) =>
+            ifcViewer.context.scene.removeModel(mesh)
+          );
+          connectionGroups[connection.key] = [];
+        });
+        
+
+        setLoading(true);
+
+        ifcViewer.IFC.loadIfcUrl("/" + filename, true)
+          .then((model) => {
+            setIfcModel(model);
+            setOriginMaterial(model.material);
+            loadConnections();
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    }
+  }, [ifcViewer, filename, usePreset]);
+
+  async function loadConnections() {
+    const a = await fetch("/" + filename + ".json").then((res) => res.json());
+
+    const connection_amounts = Object.entries(a).map(([key, value]) => {
+      return {
+        key: key,
+        amount: value.length,
+      };
+    });
+
+    connections.forEach((connection) => {
+      (connectionGroups as any)[connection.key]?.forEach((mesh: any) =>
+        ifcViewer!.context.scene.removeModel(mesh)
+      );
+      connectionGroups[connection.key] = [];
+    });
+
+    appDispatch({
+      type: "set_connection_amounts",
+      connection_amounts: connection_amounts,
+    });
+
+    Object.entries(a).forEach(([key, value]) => {
+      connectionGroups[key] = value.map((v: any) =>
+        markCollisionPoint(new Vector3(v[0], v[2], -v[1]))
+      );
+    });
+  }
+
   function markCollisionPoint(collisionPoint: THREE.Vector3) {
-    const geometry = new SphereGeometry(1, 32, 32);
+    const geometry = new SphereGeometry(0.2, 32, 32);
     const material = new MeshBasicMaterial({ color: 0xff0000 });
     const sphere = new Mesh(geometry, material);
     sphere.position.copy(collisionPoint);
 
     // Add the sphere to the viewer's scene
     ifcViewer!.context.scene.add(sphere);
-  }
-
-  async function getIfcElementsByType(modelID: number, type: number) {
-    const ids = await ifcViewer!.IFC.loader.ifcManager.getAllItemsOfType(
-      modelID,
-      type,
-      false
-    );
-    const elements: THREE.Mesh[] = [];
-
-    for (const id of ids) {
-      const mesh = ifcViewer!.IFC.loader.ifcManager.createSubset({
-        modelID,
-        ids: [id],
-        removePrevious: false,
-        material: new MeshLambertMaterial({
-          color: 0xffffff,
-          transparent: false,
-          opacity: 1,
-        }),
-      });
-      elements.push(mesh);
-    }
-
-    return elements;
+    return sphere;
   }
 
   const uploadIfcFile = () => {
@@ -175,8 +222,19 @@ export default function Ifc({
           <Upload />
           <span>Upload Model</span>
         </Button>
-        <ViewDropdown setValue={setViewMode} value={viewMode}/>
-        <Button onClick={() => setViewMode(viewMode === 'transparent' ? 'normal' : 'transparent' )} className="capitalize">
+        <ViewDropdown
+          setValue={(value: any) => {
+            setFilename(value);
+            setUsePreset(true);
+          }}
+          value={filename}
+        />
+        <Button
+          onClick={() =>
+            setViewMode(viewMode === "transparent" ? "normal" : "transparent")
+          }
+          className="capitalize"
+        >
           <Blend />
           {viewMode}
         </Button>

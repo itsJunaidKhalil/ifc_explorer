@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Blend, ChevronDown, ChevronRight } from "lucide-react";
+import { File, ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,13 +20,17 @@ const ViewDropdown = ({value, setValue}: any) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setValue("transparent")}>
-            <Blend className="h-4 w-4 mr-2" />
-            Transparent
+          <DropdownMenuItem onClick={() => setValue("DummyModel.ifc")}>
+            <File className="h-4 w-4 mr-2" />
+            DummyModel.ifc
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setValue("normal")}>
-            <Blend className="h-4 w-4 mr-2" />
-            Normal
+          <DropdownMenuItem onClick={() => setValue("SmallModel.ifc")}>
+          <File className="h-4 w-4 mr-2" />
+            SmallModel.ifc
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setValue("WoodenOffice.ifc")}>
+          <File className="h-4 w-4 mr-2" />
+            WoodenOffice.ifc
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
