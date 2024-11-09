@@ -88,43 +88,58 @@ function App() {
     connections: connections,
   });
   const [isTransparent, setIsTransparent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   console.log(state);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-background border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
-          <h1 className="text-2xl font-bold">IFCTroll 🧌</h1>
-          <MyAlert2
-            connection_comps={state.connection_components}
-            appDispatch={dispatch}
-          />
+    <div>
+      {loading && (
+        <div className="overlay fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <span className="font-semibold text-lg">Building the 3d Model</span>
         </div>
-      </header>
+      )}
+      <div className="min-h-screen flex flex-col">
+        <header className="bg-background border-b">
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center gap-4">
+            <h1 className="text-2xl font-bold">IFCTroll 🧌</h1>
+            <MyAlert2
+              connection_comps={state.connection_components}
+              appDispatch={dispatch}
+            />
+          </div>
+        </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-3">
-            <Card className="h-full">
-              <Ifc isTransparent={isTransparent}/>
-            </Card>
-            <Button onClick={() => setIsTransparent(!isTransparent)}>{isTransparent ? 'Transparent' : 'Set transparent'}</Button>
-          </div>
-          <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Connections</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {state.connections.map((val, i) => (
-                <ConnDisplay key={i} {...val} appDispatch={dispatch} />
-              ))}
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div className="lg:col-span-3">
+              <Card className="h-full">
+                <Ifc
+                  isTransparent={isTransparent}
+                  setIsTransparent={setIsTransparent}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              </Card>
+              {/* <Button onClick={() => setIsTransparent(!isTransparent)}>{isTransparent ? 'Transparent' : 'See transparent'}</Button> */}
             </div>
-            <h2 className="text-xl font-semibold mb-4 mt-4">Configurations</h2>
-            <Card>
-              <ExpandableTableLeft />
-            </Card>
+            <div className="lg:col-span-2">
+              <h2 className="text-xl font-semibold mb-4">Connections</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {state.connections.map((val, i) => (
+                  <ConnDisplay key={i} {...val} appDispatch={dispatch} />
+                ))}
+              </div>
+              <h2 className="text-xl font-semibold mb-4 mt-4">
+                Configurations
+              </h2>
+              <Card>
+                <ExpandableTableLeft />
+              </Card>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

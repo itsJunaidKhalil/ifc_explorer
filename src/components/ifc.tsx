@@ -1,17 +1,28 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, useEffect, useState, useRef } from "react";
 import { Color, MeshLambertMaterial } from "three";
 import { IFCBEAM, IFCCOLUMN } from "web-ifc";
 import { IfcViewerAPI } from "web-ifc-viewer";
 import { Input } from "./ui/input";
 import { Label } from "@radix-ui/react-label";
+import { Button } from "./ui/button";
+import { Upload, Blend } from "lucide-react";
 
 interface Props {
   isTransparent: boolean;
-};
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTransparent: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export default function Ifc({isTransparent}: Props) {
+export default function Ifc({
+  isTransparent,
+  setLoading,
+  loading,
+  setIsTransparent,
+}: Props) {
   const ifcContainerRef = createRef<HTMLDivElement>();
   const [ifcViewer, setIfcViewer] = useState<IfcViewerAPI>();
+  const inputRef = useRef<any>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ifcModel, setIfcModel] = useState<any>();
@@ -35,7 +46,7 @@ export default function Ifc({isTransparent}: Props) {
       });
       ifcViewer.IFC.loadIfcUrl("/DummyModel.ifc", true).then((model) => {
         setIfcModel(model);
-        setOriginMaterial((model.material));
+        setOriginMaterial(model.material);
       });
       setIfcViewer(ifcViewer);
     }
@@ -53,7 +64,9 @@ export default function Ifc({isTransparent}: Props) {
       });
     } else {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ifcModel.material = originMaterial.map((oM: any) => new MeshLambertMaterial(oM));
+      ifcModel.material = originMaterial.map(
+        (oM: any) => new MeshLambertMaterial(oM)
+      );
     }
   }, [isTransparent]);
 
@@ -62,11 +75,14 @@ export default function Ifc({isTransparent}: Props) {
     if (file && ifcViewer) {
       ifcViewer.context.scene.removeModel(ifcModel!);
       console.log("loading file", file);
-
+      setLoading(true);
       const ifcURL = URL.createObjectURL(file);
 
       const model = await ifcViewer.IFC.loadIfcUrl(ifcURL, true);
       setIfcModel(model);
+      if (model) {
+        setLoading(false);
+      }
       console.log(model.material);
       setOriginMaterial(model.material);
 
@@ -113,13 +129,41 @@ export default function Ifc({isTransparent}: Props) {
     return elements;
   }
 
+  const uploadIfcFile = () => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  };
+
   return (
     <div className="h-[80vh]">
       <div ref={ifcContainerRef} className="h-full" />
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+      {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Input id="picture" type="file" accept=".ifc" onChange={ifcOnLoad}  />
-        </div>
+        </div> */}
+      <div className="flex items-center gap-2">
+        <Button
+          className="ml-5"
+          variant="default"
+          size="default"
+          onClick={() => uploadIfcFile()}
+        >
+          <Upload />
+          <span>Upload Model</span>
+        </Button>
+        <Button onClick={() => setIsTransparent(!isTransparent)}>
+          <Blend />
+          {isTransparent ? "Transparent" : "See transparent"}
+        </Button>
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".ifc"
+        onChange={ifcOnLoad}
+        className="hidden"
+      />
       {/* <Input type="file" accept=".ifc" onChange={ifcOnLoad} /> */}
     </div>
   );
