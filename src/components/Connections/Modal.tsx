@@ -133,9 +133,9 @@ export default function Modal({ con, appDispatch }: Props) {
 
   const getLink = (from: string, to: string) => {
     if (from === "COLUMN" && to === "FOUNDATION") {
-      return "https://www.prodlib.com/search?q=column&q=foundation&lang=en";
+      return "https://www.prodlib.com/search?q=column&cv=7a27fe8025ba4f7f9493c8e3560c75f3&lang=en";
     } else if (from === "COLUMN" && to === "BEAM") {
-      return "https://www.prodlib.com/search?q=column&q=beam&lang=en";
+      return "https://www.prodlib.com/search?q=column&cv=cea7b7184702477a8af6362aea93d3e9&lang=en";
     } else if (from === "BEAM" && to === "FOUNDATION") {
       return "https://www.prodlib.com/search?q=beam&q=foundation&lang=en";
     } else if (from === "COLUMN" && to === "COLUMN") {
