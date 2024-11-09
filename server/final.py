@@ -59,7 +59,14 @@ if iterator.initialize():
             break
 
 # Clash detection for different pairs of elements
-clash_results = {}
+clash_results = {
+    "COLUMN_BEAM": [],
+    "COLUMN_COLUMN": [],
+    "COLUMN_FOOTING": [],
+    "BEAM_BEAM": [],
+    "BEAM_FOOTING": [],
+    "FOOTING_FOOTING": [],
+}
 
 # Column to Beam clashes
 if len(columns) != 0 and len(beams) != 0:
@@ -176,15 +183,47 @@ def write_clash_data_to_json(clash_data, filename="clash_data.json"):
         json.dump(formatted_clash_data, f, indent=4)
 
 
-# Example clash data for each category:
-ctb_out = process_clashes(columns_to_beams_clashes)
-ctc_out = process_clashes(columns_to_columns_clashes)
-c_f_out = process_clashes(columns_to_footings_clashes)
-b_b_out = process_clashes(beams_to_beams_clashes)
-b_f_out = process_clashes(beams_to_footings_clashes)
-f_f_out = process_clashes(footings_to_footings_clashes)
+# Process each clash type with a conditional check
+
+# COLUMN_BEAM clashes
+if clash_results["COLUMN_BEAM"]:
+    ctb_out = process_clashes(clash_results["COLUMN_BEAM"])
+else:
+    ctb_out = []
+
+# COLUMN_COLUMN clashes
+if clash_results["COLUMN_COLUMN"]:
+    ctc_out = process_clashes(clash_results["COLUMN_COLUMN"])
+else:
+    ctc_out = []
+
+# COLUMN_FOOTING clashes
+if clash_results["COLUMN_FOOTING"]:
+    c_f_out = process_clashes(clash_results["COLUMN_FOOTING"])
+else:
+    c_f_out = []
+
+# BEAM_BEAM clashes
+if clash_results["BEAM_BEAM"]:
+    b_b_out = process_clashes(clash_results["BEAM_BEAM"])
+else:
+    b_b_out = []
+
+# BEAM_FOOTING clashes
+if clash_results["BEAM_FOOTING"]:
+    b_f_out = process_clashes(clash_results["BEAM_FOOTING"])
+else:
+    b_f_out = []
+
+# FOOTING_FOOTING clashes
+if clash_results["FOOTING_FOOTING"]:
+    f_f_out = process_clashes(clash_results["FOOTING_FOOTING"])
+else:
+    f_f_out = []
+
 
 # Format clash data for each category
+# Format clash data for each category by passing each category and its data as a tuple
 formatted_clash_data = format_clash_data_for_output(
     ("COLUMN_COLUMN", ctc_out),
     ("COLUMN_BEAM", ctb_out),
