@@ -185,7 +185,7 @@ export default function Modal({ con, appDispatch }: Props) {
           </div>
           <Label className="-mb-3">Components</Label>
           <span className="-mb-2 text-gray-500 text-xs">
-            Select which components you want for your configurations
+            Select which components you want for your configuration
           </span>
           <div className="overflow-y-auto max-h-[60vh]">
             <ModalOptions configurations={state} confDispatch={dispatch} />

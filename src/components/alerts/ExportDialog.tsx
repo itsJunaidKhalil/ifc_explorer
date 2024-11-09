@@ -50,9 +50,9 @@ export default function ExportDialog({ connection_comps, appDispatch }: Props) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Configurations for checkout</DialogTitle>
+            <DialogTitle>Export configurations</DialogTitle>
           </DialogHeader>
-          <div className="overflow-y-auto max-h-[60vh]">
+          <div className="overflow-y-auto max-h-[60vh] border rounded-md">
               <MyTable2 configurations={selectedConfigs} appDispatch={appDispatch} defaultExpandedRows={rows}/>
           </div>
           <DialogFooter className="sm:justify-end gap-2">
