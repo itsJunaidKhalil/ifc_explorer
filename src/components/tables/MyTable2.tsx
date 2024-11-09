@@ -18,7 +18,6 @@ interface Props {
   appDispatch: React.Dispatch<AppAction>;
 }
 const MyTable2 = ({ configurations, appDispatch }: Props) => {
-
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
 
   const toggleRowExpanded = (rowId: number) => {
@@ -72,18 +71,21 @@ const MyTable2 = ({ configurations, appDispatch }: Props) => {
       <TableBody>
         {configurations.map((config) => (
           <>
-            <TableRow key={config.id}>
-              <TableCell>
+            <TableRow
+              key={config.id}
+            >
+              <TableCell 
+              onClick={() => toggleRowExpanded(config.id)}
+              >
                 <Checkbox
                   checked={true}
                   onCheckedChange={() => toggleConfig(config.id)}
                 />
               </TableCell>
-              <TableCell>
-                <span
-                  className="cursor-pointer"
-                  onClick={() => toggleRowExpanded(config.id)}
-                >
+              <TableCell 
+              onClick={() => toggleRowExpanded(config.id)}
+              >
+                <span className="cursor-pointer">
                   {expandedRows[config.id] ? (
                     <ChevronDown className="h-4 w-4 inline mr-4" />
                   ) : (
@@ -115,9 +117,7 @@ const MyTable2 = ({ configurations, appDispatch }: Props) => {
             </TableRow>
             {expandedRows[config.id] && (
               <TableRow>
-                <TableCell colSpan={1}>
-                </TableCell>
-                <TableCell colSpan={3}>
+                <TableCell colSpan={4}>
                   {config.components.map((comp) => (
                     <li key={comp.id}>{comp.name}</li>
                   ))}
