@@ -181,6 +181,7 @@ export default function Modal({ con, appDispatch }: Props) {
               className="min-w-full"
             ></Input>
           </div>
+          <Label className="mt-5">Select which components you want for your configurations</Label>
           <div className="overflow-y-auto max-h-[60vh]">
             <ModalOptions configurations={state} confDispatch={dispatch} />
           </div>
