@@ -52,6 +52,7 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
           <div>
             {!conn.visible && (
               <EyeOff
+                color={conn.color}
                 className="ml-2"
                 onClick={() =>
                   appDispatch({
@@ -63,6 +64,7 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
             )}
             {conn.visible && (
               <Eye
+                color={conn.color}
                 className="ml-2"
                 onClick={() =>
                   appDispatch({

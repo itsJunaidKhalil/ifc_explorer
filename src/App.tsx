@@ -173,8 +173,8 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   console.log(state);
-  console.log('-------------')
-  console.log(state.configurations)
+  console.log("-------------");
+  console.log(state.configurations);
   return (
     <div>
       {loading && (
@@ -202,16 +202,14 @@ function App() {
         <main className="flex-grow container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div className="lg:col-span-3">
-              <Card className="h-full">
-                <Ifc
-                  isTransparent={isTransparent}
-                  setIsTransparent={setIsTransparent}
-                  loading={loading}
-                  setLoading={setLoading}
-                  appDispatch={dispatch}
-                  connections={state.connections}
-                />
-              </Card>
+              <Ifc
+                isTransparent={isTransparent}
+                setIsTransparent={setIsTransparent}
+                loading={loading}
+                setLoading={setLoading}
+                appDispatch={dispatch}
+                connections={state.connections}
+              />
               {/* <Button onClick={() => setIsTransparent(!isTransparent)}>{isTransparent ? 'Transparent' : 'See transparent'}</Button> */}
             </div>
             <div className="lg:col-span-2">

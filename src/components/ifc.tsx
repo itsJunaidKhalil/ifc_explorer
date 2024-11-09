@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Card } from "./ui/card";
 
 interface Props {
   isTransparent: boolean;
@@ -143,7 +144,6 @@ export default function Ifc({
           );
           connectionGroups[connection.key] = [];
         });
-        
 
         setLoading(true);
 
@@ -183,15 +183,16 @@ export default function Ifc({
     });
 
     Object.entries(a).forEach(([key, value]) => {
+      const color = connections.find((c) => c.key === key)!.color;
       connectionGroups[key] = value.map((v: any) =>
-        markCollisionPoint(new Vector3(v[0], v[2], -v[1]))
+        markCollisionPoint(new Vector3(v[0], v[2], -v[1]), color)
       );
     });
   }
 
-  function markCollisionPoint(collisionPoint: THREE.Vector3) {
+  function markCollisionPoint(collisionPoint: THREE.Vector3, color: string) {
     const geometry = new SphereGeometry(0.2, 32, 32);
-    const material = new MeshBasicMaterial({ color: 0xff0000 });
+    const material = new MeshBasicMaterial({ color });
     const sphere = new Mesh(geometry, material);
     sphere.position.copy(collisionPoint);
 
@@ -207,13 +208,14 @@ export default function Ifc({
   };
 
   return (
-    <div className="h-[80vh]">
-      <div ref={ifcContainerRef} className="h-full" />
-
+    <div>
+      <Card className="md:h-[80vh]">
+        <div ref={ifcContainerRef} className="h-full" />
+      </Card>
       {/* <div className="grid w-full max-w-sm items-center gap-1.5">
           <Input id="picture" type="file" accept=".ifc" onChange={ifcOnLoad}  />
         </div> */}
-      <div className="flex items-center gap-2 py-2">
+      <div className="flex items-center gap-2 py-2 flex-wrap">
         <Button
           variant="default"
           size="default"
