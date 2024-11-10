@@ -70,7 +70,7 @@ const MyTable2 = ({ configurations, appDispatch, defaultExpandedRows = [] }: Pro
         <TableRow>
           <TableHead className="w-[100px]">Select</TableHead>
           <TableHead>Name</TableHead>
-          <TableHead className="text-right">Quantity</TableHead>
+          <TableHead className="text-center">Quantity</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -99,8 +99,8 @@ const MyTable2 = ({ configurations, appDispatch, defaultExpandedRows = [] }: Pro
                   {config.name}
                 </span>
               </TableCell>
-              <TableCell className="text-right">
-                <div className="flex items-center justify-end space-x-2">
+              <TableCell className="text-center">
+                <div className="flex items-center justify-center space-x-2">
                   <Button
                     variant="outline"
                     size="icon"

@@ -42,7 +42,7 @@ export default function ConfigurationsTable({
           <TableRow>
             <TableHead className="w-[50px]"></TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead className="text-center">Amount</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -67,7 +67,7 @@ export default function ConfigurationsTable({
                   </Button>
                 </TableCell>
                 <TableCell className="font-medium">{row.name}</TableCell>
-                <TableCell className="flex items-center justify-end space-x-1">
+                <TableCell className="flex items-center justify-center space-x-1">
                   <Button
                     variant="outline"
                     size="icon"
