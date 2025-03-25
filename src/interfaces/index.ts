@@ -12,6 +12,13 @@ interface Connection {
   key: string;
   visible: boolean;
   color: string;
+  connectionType?: string; // ✅ Added
+  material?: string;       // ✅ Added
+  dimensions?: {
+      length?: number;
+      width?: number;
+      height?: number;
+  }
 }
 
 const connections: Connection[] = [

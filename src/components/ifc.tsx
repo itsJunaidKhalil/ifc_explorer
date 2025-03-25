@@ -88,7 +88,31 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
     });
   }, [connections]);
 
-  const ifcOnLoad = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+const ifcOnLoad = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Function to extract hierarchy from IFC
+    const getHierarchy = async (ifcModel: any) => {
+        const hierarchy = await ifcViewer!.IFC.loader.ifcManager.getSpatialStructure(ifcModel.modelID);
+        console.log("IFC Hierarchy:", hierarchy);
+    };
+
+    // Function to extract element details
+    const getElementDetails = async (modelID: number, expressID: number) => {
+      const properties = await ifcViewer!.IFC.loader.ifcManager.getItemProperties(modelID, expressID);
+      return {
+          profile: properties.ProfileType || "Unknown",
+          material: properties.Material || "Unknown",
+          dimensions: properties.Length || properties.Width || properties.Height 
+              ? { 
+                  length: properties.Length || "N/A", 
+                  width: properties.Width || "N/A", 
+                  height: properties.Height || "N/A" 
+                }
+              : null // Return null if no dimensions exist
+      };
+  };
+  
+
     const file = e && e.target && e.target.files && e.target.files[0];
     if (file && ifcViewer) {
       if (ifcModel) {
@@ -108,11 +132,37 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
 
       const model = await ifcViewer.IFC.loadIfcUrl(ifcURL, true);
       setIfcModel(model);
+    
       if (model) {
         setLoading(false);
       }
       setOriginMaterial(model.material);
       loadConnections(file.name);
+     
+        //addeed
+        const getHierarchy = async (ifcModel: any) => {
+          const hierarchy = await ifcViewer!.IFC.loader.ifcManager.getSpatialStructure(ifcModel.modelID);
+          console.log("IFC Hierarchy:", hierarchy);
+      };
+      getHierarchy(model);
+
+      //----------------
+      const getElementDetails = async (modelID: number, expressID: number) => {
+        const properties = await ifcViewer!.IFC.loader.ifcManager.getItemProperties(modelID, expressID);
+        return {
+            profile: properties.ProfileType || "Unknown",
+            material: properties.Material || "Unknown",
+            dimensions: {
+                length: properties.Length || "N/A",
+                width: properties.Width || "N/A",
+                height: properties.Height || "N/A"
+            }
+        };
+    };
+    console.log(await getElementDetails(ifcModel.modelID, ifcModel.expressID));
+    
+      //-------------------
+      
     }
   };
 
@@ -166,9 +216,6 @@ export default function Ifc({ setLoading, appDispatch, connections }: Props) {
         amount: value.length,
       };
     });
-
- 
-
     appDispatch({
       type: "set_connection_amounts",
       connection_amounts: connection_amounts,

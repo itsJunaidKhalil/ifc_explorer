@@ -75,7 +75,21 @@ export default function ConnDisplay({ conn, appDispatch }: Props) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="grow">
+      
+<CardContent className="grow">
+    <Badge variant="secondary" className="text-xs">
+        {cap(fromMaterial)} to {cap(toMaterial)}
+    </Badge>
+    <div className="mt-2 text-sm">
+        <strong>Connection Type:</strong> {conn.connectionType || "Unknown"} <br />
+        <strong>Material:</strong> {conn.material || "Unknown"} <br />
+        <strong>Dimensions:</strong> 
+{conn.dimensions ? 
+    `${conn.dimensions.length || "N/A"} x ${conn.dimensions.width || "N/A"} x ${conn.dimensions.height || "N/A"}` 
+    : "No dimensions available"}
+
+    </div>
+
         <Badge variant="secondary" className="text-xs">
           {cap(fromMaterial)} to {cap(toMaterial)}
         </Badge>
